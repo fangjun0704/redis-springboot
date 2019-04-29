@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.project.mapper.UserMapperXML">
+
+  <resultMap id="user" type="com.company.project.entity.User">
+    <id property="uId" column="u_id"/>
+    <result property="name" column="name"/>
+    <result property="age" column="age"/>
+    <result property="testField" column="test_field"/>
+  </resultMap>
+
+  <insert id="insertUser" parameterType="com.company.project.entity.User" useGeneratedKeys="true"
+    keyProperty="uId">
+    INSERT INTO t_user (name, age, test_field)
+    VALUES (#{name}, #{age}, #{testField})
+  </insert>
+
+  <delete id="deleteUserById">
+    DELETE FROM t_user
+    WHERE u_id = #{uId}
+  </delete>
+
+  <update id="updateUser">
+    UPDATE t_user
+    SET name = #{name}, age = #{age}, test_field = #{testField}
+    WHERE u_id = #{uId}
+  </update>
+
+
+  <!--如果这里没有指定resultMap将 实体类的字段 与 数据库列对应起来，可能返回值会出错
+  因为mybatis【默认没有】开启驼峰规则
+  解决方案1：增加 resultMap = "user" ,
+  解决方案2: 在application.properties配置 mybatis.configuration.map-underscore-to-camel-case=true
+  解决方案3: 增加自定义 Bean -> ConfigurationCustomizer 然后设置属性
+  -->
+  <select id="getUserById" resultType="com.company.project.entity.User">
+    SELECT *
+    FROM t_user
+    WHERE u_id = #{uId}
+  </select>
+</mapper>
